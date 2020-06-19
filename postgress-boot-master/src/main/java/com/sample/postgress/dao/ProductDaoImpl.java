@@ -135,7 +135,7 @@ private MailSender mailsender;
 
 	@Override
 	public Message accept(int product_id,int agreement_id,String email,String password) {
-		String sql="select count(*) from user_table where user_id=? and password=?";
+		String sql="select count(*) from user_table where email=? and password=?";
 	    int check=temp.queryForObject(sql,new Object [] {email,password},Integer.class);
 	    if(check!=1) {Message m =new Message("Invalid Credentials");return m;}
 	    Date date=new Date();
