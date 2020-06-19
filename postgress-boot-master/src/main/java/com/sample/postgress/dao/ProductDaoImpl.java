@@ -114,7 +114,7 @@ private MailSender mailsender;
     sql="insert into agreement_detail(id,product,agreement,status,team,price)values(:id,:product,:agreement,:status,:team,:price)";
      holder = new GeneratedKeyHolder();
     param = new MapSqlParameterSource()
-    		.addValue("id", numOfagreements)
+    		.addValue("id", numOfagreements+1)
  			.addValue("product",product_id)
  			.addValue("agreement",100+numOfagreements+1)
  			.addValue("status","active")
@@ -142,16 +142,19 @@ private MailSender mailsender;
 	    Date date=new Date();
 		Timestamp ts=new Timestamp(date.getTime());
 		 User user=new User();
-	     sql="select from user_table where email=? and password=?";
+	     sql="select * from user_table where email=? and password=?";
 	    user=temp.queryForObject(sql,new Object[] {email,password},new UserRowMapper());
 		
 		sql="select * from user_link_team where user_id=?";
 		   User_link_team us=new User_link_team();
 		    us=temp.queryForObject(sql,new Object[] {user.getUser_id()},new User_link_teamRowMapper());
-	    sql="insert into agreement_audit(agreement,action,date,user_id,team,comment)values(:agreement,:action,:date,:user_id,:team,:comment)";
+		    sql="select count(*) from agreement_audit";
+		    int x=temp.queryForObject(sql, Integer.class);
+	    sql="insert into agreement_audit(id,agreement,action,date,user_id,team,comment)values(:id,:agreement,:action,:date,:user_id,:team,:comment)";
 	    	
 	     KeyHolder holder = new GeneratedKeyHolder();
 	    MapSqlParameterSource param = new MapSqlParameterSource()
+	    		.addValue("id", x+1)
 	 			.addValue("agreement",agreement_id)
 	 			.addValue("action","Approval email sent")
 	 			.addValue("date",ts)
