@@ -80,7 +80,7 @@ private MailSender mailsender;
 		    Message me=new Message("Invalid Credentials");
 		    m.add(me); return m;}
 		    User user=new User();
-		     sql="select from user_table where email=? and password=?";
+		     sql="select * from user_table where email=? and password=?";
 		    user=temp.queryForObject(sql,new Object[] {email,pass},new UserRowMapper());
 			 sql="select count(*) from agreement";
 			Date date=new Date();
@@ -111,9 +111,10 @@ private MailSender mailsender;
 			;
     template.update(sql,param, holder);
    
-    sql="insert into agreement_detail(product,agreement,status,team,price)values(:product,:agreement,:status,:team,:price)";
+    sql="insert into agreement_detail(id,product,agreement,status,team,price)values(:id,:product,:agreement,:status,:team,:price)";
      holder = new GeneratedKeyHolder();
     param = new MapSqlParameterSource()
+    		.addValue("id", numOfagreements)
  			.addValue("product",product_id)
  			.addValue("agreement",100+numOfagreements+1)
  			.addValue("status","active")
