@@ -41,11 +41,11 @@ public class ApplicationController {
 	{
 		return productService.getProduct(name);
 	}
-	@GetMapping(value="/productList/initiate")
-	public List<Message> initiateAgreement(@RequestParam("id") int id,@RequestParam("email") String  email,
+	@GetMapping(value="/productList/{id}/initiate")
+	public List<Message> initiateAgreement(@PathVariable(name="id") int name,@RequestParam("email") String  email,
 			@RequestParam("price")int price,@RequestParam("password")String password,HttpServletResponse response)
 	{
-		return productService.initiateAgreement(id,email,price,password);
+		return productService.initiateAgreement(name,email,price,password);
 	}
 	@GetMapping(value="/productList/{id}/getAll")
 	public List<Agreement_Detail> getAll(@PathVariable(name="id") int name )

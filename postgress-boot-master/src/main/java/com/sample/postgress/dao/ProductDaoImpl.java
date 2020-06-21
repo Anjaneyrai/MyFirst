@@ -16,7 +16,6 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Repository;
-
 import com.sample.postgress.entity.Agreement_Detail;
 import com.sample.postgress.entity.Agreement_Team_Link;
 import com.sample.postgress.entity.Message;
@@ -41,37 +40,30 @@ private MailSender mailsender;
 	}
 	@Autowired	
 	 JdbcTemplate temp=new JdbcTemplate();
-	
- 
 	@Override
 	public List<Product> findAll() {
 		return template.query("select *from product" ,new ProductRowMapper());
 	}
-
 	@Override
 	public void insert(Product p) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void update(Product p) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void delete(Product p) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public Product getProduct(int id) {
 		String sql="select * from product where id=?";
 		return temp.queryForObject(sql,new Object[] {id}, new ProductRowMapper());
 	}
-
 	@Override
 	public List<Message> initiateAgreement(int product_id, String  email, double price,String pass) {
 		    String sql="select count(*) from user_table where email=? and password=?";
