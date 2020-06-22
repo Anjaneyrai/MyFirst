@@ -61,7 +61,7 @@ public List<Message> accept(int name,int agreement,String email,String pass) {
 }
 
 @Override
-public Message reject(int name, int agreement, String email, String password) {
+public List<Message> reject(int name, int agreement, String email, String password) {
 	
 	return productdao.reject(name,agreement,email,password);
 }

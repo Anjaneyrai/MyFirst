@@ -58,7 +58,7 @@ public class ApplicationController {
 		return productService.accept(name,agreement,email,password);
 	}
 	@GetMapping(value="/productList/{id}/reject")
-	public Message reject(@PathVariable(name="id") int name ,@RequestParam("agreement") int agreement ,@RequestParam("email") String email,@RequestParam("password") String password)
+	public List<Message> reject(@PathVariable(name="id") int name ,@RequestParam("agreement") int agreement ,@RequestParam("email") String email,@RequestParam("password") String password)
 	{
 		return productService.reject(name,agreement,email,password);
 	}
