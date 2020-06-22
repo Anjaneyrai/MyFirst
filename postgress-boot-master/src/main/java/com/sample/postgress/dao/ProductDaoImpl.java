@@ -186,10 +186,12 @@ private MailSender mailsender;
 	    return m;
 	}
 	@Override
-	public Message reject(int product_id,int agreement_id,String email,String password) {
+	public List<Message> reject(int product_id,int agreement_id,String email,String password) {
 		String sql="select count(*) from user_table where user_id=? and password=?";
 	    int check=temp.queryForObject(sql,new Object [] {email,password},Integer.class);
-	    if(check!=1) {Message m =new Message("Invalid Credentials");return m;}
+	    if(check!=1) {List<Message> m =new ArrayList<Message>();
+	    Message me=new Message("Invalid Credentials");
+	    m.add(me); return m;}
 	    User user=new User();
 	     sql="select from user_table where email=? and password=?";
 	    user=temp.queryForObject(sql,new Object[] {email,password},new UserRowMapper());
@@ -199,6 +201,12 @@ private MailSender mailsender;
 		sql="select * from user_link_team where user_id=?";
 		   User_link_team us=new User_link_team();
 		    us=temp.queryForObject(sql,new Object[] {user.getUser_id()},new User_link_teamRowMapper());
+		    String sq="select * from agreement_team_link where agreement=?";
+		    Agreement_Team_Link ag=new Agreement_Team_Link();
+		     ag=temp.queryForObject(sq, new Object[] {agreement_id},new Agreement_Team_Link_RowMapper());
+		     if(us.getTeam()==ag.getTeam()) {List<Message> m =new ArrayList<Message>();
+			    Message me=new Message("You cannot reject Your Team Agreement");
+			    m.add(me); return m;}		     
 	    sql="insert into agreement_audit(agreement,action,date,user_id,team,comment)values(:agreement,:action,:date,:user_id,:team,:comment)";
 	    	
 	     KeyHolder holder = new GeneratedKeyHolder();
@@ -218,9 +226,7 @@ private MailSender mailsender;
 	    		 .addValue("status", "rejected")
 	    		 ;
 	     template.update(sql,param, holder);
-	     sql="select * from agreement_team_link where agreement=?";
-	     Agreement_Team_Link ag=new Agreement_Team_Link();
-	     ag=temp.queryForObject(sql, new Object[] {agreement_id},new Agreement_Team_Link_RowMapper());
+	    
 	     sql="select * from team where team_id=?";
 	     Team team=new Team();
 	     team=temp.queryForObject(sql, new Object[] {ag.getTeam()},new Team_RowMapper());
@@ -231,7 +237,9 @@ private MailSender mailsender;
 	     mail.setSubject("Rejection of Agreement");
 	     mail.setText("Hello Team "+team.getTeam_name()+" your agreement is rejected");
 	     mailsender.send(mail);
-	     Message m =new Message("Rejection Mail Sent");return m;
+	     Message me=new Message("Rejection Mail Sent");
+	     List<Message> m =new ArrayList<Message>();   
+		    m.add(me); return m;
 	}
 
 
