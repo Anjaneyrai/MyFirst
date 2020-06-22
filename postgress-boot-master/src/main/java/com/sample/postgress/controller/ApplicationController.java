@@ -53,7 +53,7 @@ public class ApplicationController {
 		return productService.getAll(name);
 	}
 	@GetMapping(value="/productList/{id}/accept")
-	public Message accept(@PathVariable(name="id") int name ,@RequestParam("agreement") int agreement ,@RequestParam("email") String email,@RequestParam("password") String password)
+	public List<Message> accept(@PathVariable(name="id") int name ,@RequestParam("agreement") int agreement ,@RequestParam("email") String email,@RequestParam("password") String password)
 	{
 		return productService.accept(name,agreement,email,password);
 	}

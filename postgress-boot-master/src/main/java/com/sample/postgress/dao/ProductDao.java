@@ -15,6 +15,6 @@ public interface ProductDao {
 	Product getProduct(int id);
 	List<Message> initiateAgreement(int product_id, String email,double price,String pass);
 	List<Agreement_Detail> getAll(int name);
-	Message accept(int id,int agreement,String email,String password);
+	List<Message> accept(int id,int agreement,String email,String password);
 	Message reject(int id,int agreement,String email,String password);
 }

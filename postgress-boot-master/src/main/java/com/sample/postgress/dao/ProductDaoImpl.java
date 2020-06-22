@@ -127,10 +127,12 @@ private MailSender mailsender;
 	}
 
 	@Override
-	public Message accept(int product_id,int agreement_id,String email,String password) {
+	public List<Message> accept(int product_id,int agreement_id,String email,String password) {
 		String sql="select count(*) from user_table where email=? and password=?";
 	    int check=temp.queryForObject(sql,new Object [] {email,password},Integer.class);
-	    if(check!=1) {Message m =new Message("Invalid Credentials");return m;}
+	    if(check!=1) {List<Message> m =new ArrayList<Message>();
+	    Message me=new Message("Invalid Credentials");
+	    m.add(me); return m;}
 	    Date date=new Date();
 		Timestamp ts=new Timestamp(date.getTime());
 		 User user=new User();
@@ -176,7 +178,9 @@ private MailSender mailsender;
 	     mail.setText("Hello Team "+team.getTeam_name()+" your agreement is approved");
 	     mailsender.send(mail);
 	     
-	     Message m =new Message("Approval Mail Sent");return m;
+	     Message me=new Message("Approval Mail Sent");
+	     List<Message> m =new ArrayList<Message>();m.add(me);
+	    return m;
 	}
 	@Override
 	public Message reject(int product_id,int agreement_id,String email,String password) {

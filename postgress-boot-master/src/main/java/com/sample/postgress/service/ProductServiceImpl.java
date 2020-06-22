@@ -55,7 +55,7 @@ public List<Agreement_Detail> getAll(int name) {
 }
 
 @Override
-public Message accept(int name,int agreement,String email,String pass) {
+public List<Message> accept(int name,int agreement,String email,String pass) {
 	
 	return productdao.accept(name,agreement,email,pass);
 }
