@@ -121,7 +121,7 @@ private MailSender mailsender;
 
 	@Override
 	public List<Agreement_Detail> getAll(int name) {
-		String sql="select * from agreement_detail where product=? and status='active'";
+		String sql="select * from agreement_detail where product=? and status!='accepted and finalized'";
 		return temp.query(sql,new Object[] {name},new Agreement_DetailRowMapper());
 		//return null;
 	}
@@ -206,11 +206,14 @@ private MailSender mailsender;
 		     ag=temp.queryForObject(sq, new Object[] {agreement_id},new Agreement_Team_Link_RowMapper());
 		     if(us.getTeam()==ag.getTeam()) {List<Message> m =new ArrayList<Message>();
 			    Message me=new Message("You cannot reject Your Team Agreement");
-			    m.add(me); return m;}		     
-	    sql="insert into agreement_audit(agreement,action,date,user_id,team,comment)values(:agreement,:action,:date,:user_id,:team,:comment)";
+			    m.add(me); return m;}
+		     sql="select count(*) from agreement_audit";
+			    int x=temp.queryForObject(sql, Integer.class);
+	    sql="insert into agreement_audit(id,agreement,action,date,user_id,team,comment)values(:id,:agreement,:action,:date,:user_id,:team,:comment)";
 	    	
 	     KeyHolder holder = new GeneratedKeyHolder();
 	    MapSqlParameterSource param = new MapSqlParameterSource()
+	    		.addValue("id",x+1)
 	 			.addValue("agreement",agreement_id)
 	 			.addValue("action","Rejection email sent")
 	 			.addValue("date",ts)
@@ -219,7 +222,7 @@ private MailSender mailsender;
 	 			.addValue("comment","Teams Disagreed")
 	 			;
 	     template.update(sql,param, holder);
-	     sql = "update agreement_detail set status=:status where agreement=:agreement_id";
+	     sql = "update agreement_detail set status=:status where agreement=:agreement";
 	     holder=new GeneratedKeyHolder();
 	     param = new MapSqlParameterSource()
 	    		 .addValue("agreement",agreement_id)
