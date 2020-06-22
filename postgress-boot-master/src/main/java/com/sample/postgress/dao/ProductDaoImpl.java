@@ -138,10 +138,15 @@ private MailSender mailsender;
 		 User user=new User();
 	     sql="select * from user_table where email=? and password=?";
 	    user=temp.queryForObject(sql,new Object[] {email,password},new UserRowMapper());
-		
+		String sq="select * from agreement_team_link where agreement=?";
+	     Agreement_Team_Link ag=new Agreement_Team_Link();
+	     ag=temp.queryForObject(sq, new Object[] {agreement_id},new Agreement_Team_Link_RowMapper());
 		sql="select * from user_link_team where user_id=?";
 		   User_link_team us=new User_link_team();
 		    us=temp.queryForObject(sql,new Object[] {user.getUser_id()},new User_link_teamRowMapper());
+		    if(us.getTeam()==ag.getTeam()) {List<Message> m =new ArrayList<Message>();
+		    Message me=new Message("You cannot accept Your Team Agreement");
+		    m.add(me); return m;}
 		    sql="select count(*) from agreement_audit";
 		    int x=temp.queryForObject(sql, Integer.class);
 	    sql="insert into agreement_audit(id,agreement,action,date,user_id,team,comment)values(:id,:agreement,:action,:date,:user_id,:team,:comment)";
@@ -164,9 +169,7 @@ private MailSender mailsender;
 	    		 .addValue("status", "accepted and finalized")
 	    		 ;
 	     template.update(sql,param, holder);
-	     sql="select * from agreement_team_link where agreement=?";
-	     Agreement_Team_Link ag=new Agreement_Team_Link();
-	     ag=temp.queryForObject(sql, new Object[] {agreement_id},new Agreement_Team_Link_RowMapper());
+	    
 	     sql="select * from team where team_id=?";
 	     Team team=new Team();
 	     team=temp.queryForObject(sql, new Object[] {ag.getTeam()},new Team_RowMapper());
