@@ -187,13 +187,13 @@ private MailSender mailsender;
 	}
 	@Override
 	public List<Message> reject(int product_id,int agreement_id,String email,String password) {
-		String sql="select count(*) from user_table where user_id=? and password=?";
+		String sql="select count(*) from user_table where email=? and password=?";
 	    int check=temp.queryForObject(sql,new Object [] {email,password},Integer.class);
 	    if(check!=1) {List<Message> m =new ArrayList<Message>();
 	    Message me=new Message("Invalid Credentials");
 	    m.add(me); return m;}
 	    User user=new User();
-	     sql="select from user_table where email=? and password=?";
+	     sql="select * from user_table where email=? and password=?";
 	    user=temp.queryForObject(sql,new Object[] {email,password},new UserRowMapper());
 		
 	    Date date=new Date();
